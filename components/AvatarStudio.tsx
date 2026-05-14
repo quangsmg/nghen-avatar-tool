@@ -6,6 +6,8 @@ import {
   useRef,
   useState,
 } from "react";
+import frameAsset from "../assets/avaframe.png";
+import { GuidePanel } from "./GuidePanel";
 import styles from "./AvatarStudio.module.css";
 
 /** Kích thước xuất (vuông, chuẩn avatar Facebook) */
@@ -104,9 +106,9 @@ export function AvatarStudio() {
       setFrameReady(true);
     };
     img.onerror = () => {
-      console.error("Không tải được khung ảnh /avaframe.png");
+      console.error("Không tải được khung ảnh (assets/avaframe.png)");
     };
-    img.src = "/avaframe.png";
+    img.src = frameAsset.src;
   }, []);
 
   useEffect(() => {
@@ -250,14 +252,16 @@ export function AvatarStudio() {
   };
 
   return (
-    <div className={styles.wrap}>
+    <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.badge}>Cuộc hẹn 20 năm</div>
         <h1 className={styles.title}>Tạo avatar Facebook</h1>
         <p className={styles.subtitle}>THPT Nghèn — Khóa 2003-2006</p>
       </header>
 
-      <div className={styles.card}>
+      <div className={styles.layout}>
+        <div className={styles.mainColumn}>
+          <div className={styles.card}>
         <div
           ref={wrapRef}
           className={styles.canvasWrap}
@@ -336,11 +340,15 @@ export function AvatarStudio() {
             Tải ảnh về máy
           </button>
         </div>
-      </div>
+          </div>
 
-      <p className={styles.footer}>
-        Ảnh vuông {CANVAS}×{CANVAS}px, phù hợp làm ảnh đại diện Facebook.
-      </p>
+          <p className={styles.footer}>
+            Ảnh vuông {CANVAS}×{CANVAS}px, phù hợp làm ảnh đại diện Facebook.
+          </p>
+        </div>
+
+        <GuidePanel />
+      </div>
     </div>
   );
 }
