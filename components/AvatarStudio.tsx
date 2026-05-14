@@ -255,7 +255,7 @@ export function AvatarStudio() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.badge}>Cuộc hẹn 20 năm</div>
-        <h1 className={styles.title}>Tạo avatar Facebook</h1>
+        <h1 className={styles.title}>Tạo avatar Facebook/Zalo</h1>
         <p className={styles.subtitle}>THPT Nghèn — Khóa 2003-2006</p>
       </header>
 

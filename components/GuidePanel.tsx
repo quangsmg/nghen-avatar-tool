@@ -39,7 +39,7 @@ export function GuidePanel() {
           vuông 1080×1080.
         </li>
         <li>
-          <strong>Đặt làm avatar Facebook</strong>.
+          <strong>Đặt làm avatar Facebook/Zalo</strong>.
         </li>
       </ol>
 
