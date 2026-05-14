@@ -26,54 +26,6 @@ function clamp(n: number, a: number, b: number) {
   return Math.min(b, Math.max(a, n));
 }
 
-function canSharePngFile(file: File): boolean {
-  if (typeof navigator === "undefined" || typeof navigator.canShare !== "function") {
-    return false;
-  }
-  try {
-    return navigator.canShare({ files: [file] });
-  } catch {
-    return false;
-  }
-}
-
-async function trySharePng(
-  blob: Blob,
-  name: string,
-): Promise<"shared" | "aborted" | "no"> {
-  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
-    return "no";
-  }
-  const file = new File([blob], name, { type: "image/png" });
-  if (!canSharePngFile(file)) return "no";
-  try {
-    await navigator.share({
-      files: [file],
-      title: name,
-      text: "Avatar — THPT Nghèn",
-    });
-    return "shared";
-  } catch (e: unknown) {
-    if (
-      e &&
-      typeof e === "object" &&
-      "name" in e &&
-      (e as { name: string }).name === "AbortError"
-    ) {
-      return "aborted";
-    }
-    return "no";
-  }
-}
-
-function shouldOfferSaveSheet(): boolean {
-  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
-  const coarse = window.matchMedia("(pointer:coarse)").matches;
-  const ua = navigator.userAgent;
-  const embedded = /Telegram|FBAN|FBAV|Instagram|Line\/|Zalo|WebView/i.test(ua);
-  return coarse || embedded;
-}
-
 export function AvatarStudio() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<HTMLImageElement | null>(null);
@@ -97,19 +49,6 @@ export function AvatarStudio() {
   } | null>(null);
   const zoomRef = useRef(zoom);
   const wrapRef = useRef<HTMLDivElement>(null);
-
-  const [saveSheet, setSaveSheet] = useState<{
-    url: string;
-    blob: Blob;
-    name: string;
-  } | null>(null);
-
-  const closeSaveSheet = useCallback(() => {
-    setSaveSheet((prev) => {
-      if (prev?.url) URL.revokeObjectURL(prev.url);
-      return null;
-    });
-  }, []);
 
   zoomRef.current = zoom;
 
@@ -295,39 +234,13 @@ export function AvatarStudio() {
     resetTransform();
   };
 
-  const shareFromSheet = async () => {
-    if (!saveSheet) return;
-    const r = await trySharePng(saveSheet.blob, saveSheet.name);
-    if (r === "shared") closeSaveSheet();
-  };
-
-  useEffect(() => {
-    if (!saveSheet) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeSaveSheet();
-    };
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [saveSheet, closeSaveSheet]);
-
   const download = () => {
     const canvas = canvasRef.current;
     if (!canvas || !hasPhoto) return;
     draw();
     canvas.toBlob(
-      async (blob) => {
+      (blob) => {
         if (!blob) return;
-
-        const offerSheet = shouldOfferSaveSheet();
-
-        const shareResult = await trySharePng(blob, DOWNLOAD_FILENAME);
-        if (shareResult === "shared" || shareResult === "aborted") return;
-
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement("a");
         anchor.href = url;
@@ -336,12 +249,7 @@ export function AvatarStudio() {
         document.body.appendChild(anchor);
         anchor.click();
         document.body.removeChild(anchor);
-
-        if (offerSheet) {
-          setSaveSheet({ url, blob, name: DOWNLOAD_FILENAME });
-        } else {
-          window.setTimeout(() => URL.revokeObjectURL(url), 45_000);
-        }
+        window.setTimeout(() => URL.revokeObjectURL(url), 45_000);
       },
       "image/png",
       1,
@@ -393,8 +301,6 @@ export function AvatarStudio() {
         <p className={styles.hint}>
           Kéo để căn chỉnh ảnh. Cuộn chuột hoặc dùng thanh trượt để zoom.
           Trên điện thoại: chụm hai ngón để phóng to / thu nhỏ.
-          Trong app (Telegram, Zalo…): sau khi bấm tải, dùng hộp thoại &quot;Lưu ảnh&quot;
-          hoặc nhấn giữ ảnh để lưu.
         </p>
 
         <div className={styles.row}>
@@ -460,75 +366,6 @@ export function AvatarStudio() {
 
         <GuidePanel />
       </div>
-
-      {saveSheet ? (
-        <div
-          className={styles.saveBackdrop}
-          role="presentation"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeSaveSheet();
-          }}
-        >
-          <div
-            className={styles.savePanel}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="save-sheet-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 id="save-sheet-title" className={styles.saveTitle}>
-              Lưu ảnh avatar
-            </h2>
-            <p className={styles.saveHelp}>
-              Trong Telegram, Zalo hoặc Facebook app, trình duyệt nhúng thường{" "}
-              <strong>chặn tải file</strong>. Hãy thử <strong>Chia sẻ / Lưu ảnh</strong>{" "}
-              (lưu vào ứng dụng Ảnh), hoặc <strong>nhấn giữ</strong> ảnh bên dưới rồi chọn{" "}
-              <strong>Lưu ảnh</strong> / <strong>Thêm vào Ảnh</strong>. Mở trang trong
-              Safari/Chrome nếu vẫn khó.
-            </p>
-            <img
-              src={saveSheet.url}
-              alt="Ảnh avatar đã xuất — nhấn giữ để lưu"
-              className={styles.savePreview}
-            />
-            <div className={styles.saveActions}>
-              <div className={styles.saveRow}>
-                <button
-                  type="button"
-                  className={`${styles.btn} ${styles.btnPrimary}`}
-                  onClick={() => void shareFromSheet()}
-                >
-                  Chia sẻ / Lưu ảnh
-                </button>
-                <a
-                  href={saveSheet.url}
-                  download={saveSheet.name}
-                  className={`${styles.btn} ${styles.btnGhost}`}
-                >
-                  Tải lại (thử)
-                </a>
-              </div>
-              <div className={styles.saveRow}>
-                <a
-                  href={saveSheet.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.btn} ${styles.btnGhost}`}
-                >
-                  Mở trong tab mới
-                </a>
-                <button
-                  type="button"
-                  className={`${styles.btn} ${styles.btnDanger}`}
-                  onClick={closeSaveSheet}
-                >
-                  Đóng
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

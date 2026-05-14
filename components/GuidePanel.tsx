@@ -24,6 +24,9 @@ export function GuidePanel() {
       <h2 id="guide-heading" className={styles.guideTitle}>
         Hướng dẫn từng bước
       </h2>
+      <p className={styles.guideWarn}>
+        Lưu ý: nên mở link công cụ trong trình duyệt (Safari, Chrome…) để tải ảnh. Trong app (Telegram, Zalo, Facebook…) thường không lưu được file.
+      </p>
       <ol className={styles.steps}>
         <li>
           <strong>Chọn ảnh</strong> — Bấm &quot;Chọn ảnh&quot;, chọn file JPG/PNG
