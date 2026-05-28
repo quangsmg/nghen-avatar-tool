@@ -8,6 +8,7 @@ import {
 } from "react";
 import frameAsset from "../assets/avaframe.png";
 import cover2Asset from "../assets/cover2.png";
+import cover3Asset from "../assets/cover3.png";
 import { GuidePanel } from "./GuidePanel";
 import styles from "./AvatarStudio.module.css";
 
@@ -25,6 +26,7 @@ const DOWNLOAD_FILENAME = "avatar-cuoc-hen-20-nam-thpt-nghen.png";
 const FRAME_OPTIONS = [
   { id: "classic", label: "Khung 1", asset: frameAsset },
   { id: "cover2", label: "Khung 2", asset: cover2Asset },
+  { id: "cover3", label: "Khung 3", asset: cover3Asset },
 ] as const;
 type FrameId = (typeof FRAME_OPTIONS)[number]["id"];
 
