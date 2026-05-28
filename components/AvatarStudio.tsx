@@ -34,9 +34,35 @@ function clamp(n: number, a: number, b: number) {
   return Math.min(b, Math.max(a, n));
 }
 
+function buildHoleMask(frameImage: HTMLImageElement): HTMLCanvasElement {
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = CANVAS;
+  maskCanvas.height = CANVAS;
+  const maskCtx = maskCanvas.getContext("2d");
+  if (!maskCtx) return maskCanvas;
+
+  maskCtx.clearRect(0, 0, CANVAS, CANVAS);
+  maskCtx.drawImage(frameImage, 0, 0, CANVAS, CANVAS);
+
+  const img = maskCtx.getImageData(0, 0, CANVAS, CANVAS);
+  const data = img.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const frameAlpha = data[i + 3];
+    const holeAlpha = 255 - frameAlpha;
+    data[i] = 255;
+    data[i + 1] = 255;
+    data[i + 2] = 255;
+    data[i + 3] = holeAlpha;
+  }
+  maskCtx.putImageData(img, 0, 0);
+  return maskCanvas;
+}
+
 export function AvatarStudio() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<HTMLImageElement | null>(null);
+  const frameHoleMaskRef = useRef<HTMLCanvasElement | null>(null);
+  const photoLayerRef = useRef<HTMLCanvasElement | null>(null);
   const userRef = useRef<HTMLImageElement | null>(null);
 
   const [frameReady, setFrameReady] = useState(false);
@@ -64,7 +90,8 @@ export function AvatarStudio() {
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     const frame = frameRef.current;
-    if (!canvas || !frame?.complete) return;
+    const holeMask = frameHoleMaskRef.current;
+    if (!canvas || !frame?.complete || !holeMask) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -75,9 +102,21 @@ export function AvatarStudio() {
     const cy = h / 2;
     const r = CIRCLE_R;
 
-    ctx.clearRect(0, 0, w, h);
+    let photoLayer = photoLayerRef.current;
+    if (!photoLayer) {
+      photoLayer = document.createElement("canvas");
+      photoLayer.width = w;
+      photoLayer.height = h;
+      photoLayerRef.current = photoLayer;
+    }
+    const photoCtx = photoLayer.getContext("2d");
+    if (!photoCtx) return;
 
     const user = userRef.current;
+    photoCtx.clearRect(0, 0, w, h);
+    photoCtx.fillStyle = BACKDROP;
+    photoCtx.fillRect(0, 0, w, h);
+
     if (user?.complete && user.naturalWidth > 0) {
       const iw = user.naturalWidth;
       const ih = user.naturalHeight;
@@ -89,23 +128,16 @@ export function AvatarStudio() {
       const dx = cx + pan.x - dw / 2;
       const dy = cy + pan.y - dh / 2;
 
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.clip();
-      ctx.fillStyle = BACKDROP;
-      ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(user, dx, dy, dw, dh);
-      ctx.restore();
-    } else {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fillStyle = BACKDROP;
-      ctx.fill();
-      ctx.restore();
+      photoCtx.drawImage(user, dx, dy, dw, dh);
     }
 
+    photoCtx.save();
+    photoCtx.globalCompositeOperation = "destination-in";
+    photoCtx.drawImage(holeMask, 0, 0, w, h);
+    photoCtx.restore();
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(photoLayer, 0, 0, w, h);
     ctx.drawImage(frame, 0, 0, w, h);
   }, [zoom, pan.x, pan.y, hasPhoto]);
 
@@ -116,6 +148,7 @@ export function AvatarStudio() {
     const img = new Image();
     img.onload = () => {
       frameRef.current = img;
+      frameHoleMaskRef.current = buildHoleMask(img);
       setFrameReady(true);
     };
     img.onerror = () => {
