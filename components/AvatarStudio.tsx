@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import frameAsset from "../assets/avaframe.png";
+import cover2Asset from "../assets/cover2.png";
 import { GuidePanel } from "./GuidePanel";
 import styles from "./AvatarStudio.module.css";
 
@@ -21,6 +22,11 @@ const BACKDROP = "#eef1ec";
 const MIN_Z = 0.35;
 const MAX_Z = 5.5;
 const DOWNLOAD_FILENAME = "avatar-cuoc-hen-20-nam-thpt-nghen.png";
+const FRAME_OPTIONS = [
+  { id: "classic", label: "Khung 1", asset: frameAsset },
+  { id: "cover2", label: "Khung 2", asset: cover2Asset },
+] as const;
+type FrameId = (typeof FRAME_OPTIONS)[number]["id"];
 
 function clamp(n: number, a: number, b: number) {
   return Math.min(b, Math.max(a, n));
@@ -32,6 +38,7 @@ export function AvatarStudio() {
   const userRef = useRef<HTMLImageElement | null>(null);
 
   const [frameReady, setFrameReady] = useState(false);
+  const [selectedFrame, setSelectedFrame] = useState<FrameId>("classic");
   const [hasPhoto, setHasPhoto] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -101,16 +108,19 @@ export function AvatarStudio() {
   }, [zoom, pan.x, pan.y, hasPhoto]);
 
   useEffect(() => {
+    setFrameReady(false);
+    const frameOption =
+      FRAME_OPTIONS.find((frame) => frame.id === selectedFrame) ?? FRAME_OPTIONS[0];
     const img = new Image();
     img.onload = () => {
       frameRef.current = img;
       setFrameReady(true);
     };
     img.onerror = () => {
-      console.error("Không tải được khung ảnh (assets/avaframe.png)");
+      console.error(`Không tải được ${frameOption.label}`);
     };
-    img.src = frameAsset.src;
-  }, []);
+    img.src = frameOption.asset.src;
+  }, [selectedFrame]);
 
   useEffect(() => {
     if (!frameReady) return;
@@ -302,6 +312,30 @@ export function AvatarStudio() {
           Kéo để căn chỉnh ảnh. Cuộn chuột hoặc dùng thanh trượt để zoom.
           Trên điện thoại: chụm hai ngón để phóng to / thu nhỏ.
         </p>
+
+        <div className={styles.framePicker} role="group" aria-label="Chọn loại khung">
+          {FRAME_OPTIONS.map((frame) => {
+            const isActive = frame.id === selectedFrame;
+            return (
+              <button
+                key={frame.id}
+                type="button"
+                className={`${styles.frameOption}${isActive ? ` ${styles.frameOptionActive}` : ""}`}
+                onClick={() => setSelectedFrame(frame.id)}
+                aria-pressed={isActive}
+              >
+                <img
+                  src={frame.asset.src}
+                  alt={frame.label}
+                  className={styles.frameThumb}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className={styles.frameLabel}>{frame.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
         <div className={styles.row}>
           <label className={styles.fileLabel}>
