@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Tạo avatar — Cuộc hẹn 20 năm | THPT Nghèn",
+  title: "Cuộc hẹn 20 năm | THPT Nghèn khóa 2003-2006",
   description:
-    "Công cụ ghép ảnh vào khung avatar Facebook — Cuộc hẹn 20 năm, THPT Nghèn khóa 2003-2006.",
+    "Bộ công cụ hội khóa: Đua Top Sĩ Số, khung avatar và ảnh đếm ngược — Cuộc hẹn 20 năm, THPT Nghèn khóa 2003-2006.",
 };
 
 export default function RootLayout({
@@ -26,7 +27,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }

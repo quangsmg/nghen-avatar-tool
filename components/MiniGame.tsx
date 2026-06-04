@@ -296,6 +296,27 @@ export function MiniGame() {
     }
   };
 
+  const deleteMyData = async () => {
+    if (!supabase || !user) return;
+    if (
+      !window.confirm(
+        "Xóa toàn bộ dữ liệu điểm danh của bạn? Lớp/hội của bạn sẽ bị trừ 1 quân số và bạn sẽ được đăng xuất.",
+      )
+    )
+      return;
+    const { error } = await supabase.from("players").delete().eq("id", user.id);
+    if (error) {
+      showToast("Xóa chưa được: " + error.message);
+      return;
+    }
+    setMyPlayer(null);
+    setJustCheckedIn(false);
+    await supabase.auth.signOut();
+    setUser(null);
+    await fetchBoard();
+    showToast("Đã xóa dữ liệu của bạn. Hẹn gặp lại!");
+  };
+
   const totalCheckins = players.length;
 
   return (
@@ -344,6 +365,12 @@ export function MiniGame() {
               onClick={() => myPlayer && openProfile(user, myPlayer)}
             >
               Sửa thông tin
+            </button>
+            <button
+              className={`${styles.btn} ${styles.btnGhost}`}
+              onClick={deleteMyData}
+            >
+              Xóa dữ liệu của tôi
             </button>
           </div>
         </div>

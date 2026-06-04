@@ -17,8 +17,13 @@ Bạn cần một **Facebook App** (https://developers.facebook.com):
    ```
    https://jqfaphxxrbagxomwjzuv.supabase.co/auth/v1/callback
    ```
-3. Lấy **App ID** và **App Secret** (Settings → Basic), điền link Privacy Policy,
-   chuyển app sang chế độ **Live**.
+3. Lấy **App ID** và **App Secret** (Settings → Basic). Ở mục **Basic**, điền:
+   - **Privacy Policy URL:** `https://<domain-cua-ban>/privacy`
+   - **User Data Deletion → Data Deletion Instructions URL:**
+     `https://<domain-cua-ban>/data-deletion`
+
+   (Thay `<domain-cua-ban>` bằng domain Vercel thật, vd `nghen.vercel.app`.)
+   Sau đó chuyển app sang chế độ **Live**.
 4. Trong **Supabase Dashboard → Authentication → Providers → Facebook**: bật
    provider, dán **Client ID** (App ID) và **Client Secret** (App Secret), Save.
 5. Trong **Authentication → URL Configuration**: đặt **Site URL** là domain

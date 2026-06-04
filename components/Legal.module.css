@@ -1,0 +1,75 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 18px 56px;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.updated {
+  margin: 0 0 24px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 22px 26px;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 22px 0 8px;
+  color: var(--accent);
+}
+
+.card h2:first-child {
+  margin-top: 0;
+}
+
+.card p,
+.card li {
+  font-size: 0.95rem;
+}
+
+.card ul {
+  padding-left: 1.2rem;
+  margin: 8px 0;
+}
+
+.card li {
+  margin-bottom: 6px;
+}
+
+.card a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.email {
+  font-weight: 700;
+}

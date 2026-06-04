@@ -67,6 +67,11 @@ create policy players_update on public.players
   for update to authenticated
   using (auth.uid() = id) with check (auth.uid() = id);
 
+-- players: chỉ tự xóa dòng của chính mình (phục vụ yêu cầu xóa dữ liệu)
+drop policy if exists players_delete on public.players;
+create policy players_delete on public.players
+  for delete to authenticated using (auth.uid() = id);
+
 -- ---------- 5. Tự cập nhật updated_at ----------
 create or replace function public.touch_updated_at()
 returns trigger language plpgsql as $$

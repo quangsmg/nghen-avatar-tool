@@ -1,0 +1,37 @@
+.footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 18px 8px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.links a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.links span {
+  color: var(--border);
+}
+
+.copy {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
