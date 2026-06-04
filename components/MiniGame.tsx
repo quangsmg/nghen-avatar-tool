@@ -109,43 +109,35 @@ export function MiniGame() {
     return (data as PlayerRow) ?? null;
   }, []);
 
-  // Khởi tạo: nạp phiên đăng nhập + bảng xếp hạng.
+  // Khởi tạo: nạp bảng xếp hạng + theo dõi phiên đăng nhập.
   useEffect(() => {
     if (!supabase) {
       setLoading(false);
       return;
     }
-    let active = true;
+    fetchBoard();
 
-    (async () => {
-      await fetchBoard();
-      const { data } = await supabase!.auth.getSession();
-      const u = data.session?.user ?? null;
-      if (!active) return;
-      setUser(u);
-      if (u) {
-        const mine = await loadMyPlayer(u.id);
-        // Vừa đăng nhập xong từ nút CTA mà chưa điểm danh -> mở form.
-        const intent = sessionStorage.getItem(INTENT_KEY);
-        if (!mine && intent) {
-          sessionStorage.removeItem(INTENT_KEY);
-          openProfile(u, null);
+    // onAuthStateChange phát INITIAL_SESSION sau khi đã đọc token từ URL,
+    // nên xử lý phiên + mở form điểm danh ở đây cho chắc chắn.
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const u = session?.user ?? null;
+        setUser(u);
+        if (u) {
+          const mine = await loadMyPlayer(u.id);
+          // Vừa đăng nhập từ nút CTA mà chưa điểm danh -> mở form.
+          if (!mine && sessionStorage.getItem(INTENT_KEY)) {
+            sessionStorage.removeItem(INTENT_KEY);
+            openProfile(u, null);
+          }
+        } else {
+          setMyPlayer(null);
         }
-      }
-      setLoading(false);
-    })();
+        setLoading(false);
+      },
+    );
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) loadMyPlayer(u.id);
-      else setMyPlayer(null);
-    });
-
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
+    return () => sub.subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchBoard, loadMyPlayer]);
 

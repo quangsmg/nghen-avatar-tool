@@ -16,6 +16,9 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        // Supabase trả token ở hash (#access_token=...) sau khi đăng nhập
+        // Facebook -> dùng implicit để client tự đọc hash và tạo phiên.
+        flowType: "implicit",
       },
     })
   : null;
