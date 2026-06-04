@@ -203,7 +203,8 @@ export function CountdownStudio() {
       const dx = w / 2 + pan.x - dw / 2;
       const dy = h / 2 + pan.y - dh / 2;
       ctx.save();
-      ctx.filter = "sepia(0.22) saturate(1.12) contrast(1.04) brightness(1.02)";
+      ctx.filter =
+        "grayscale(0.35) sepia(0.22) saturate(1.05) contrast(1.04) brightness(1.02)";
       ctx.drawImage(user, dx, dy, dw, dh);
       ctx.restore();
     } else {
