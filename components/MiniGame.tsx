@@ -365,12 +365,6 @@ export function MiniGame() {
             >
               Sửa thông tin
             </button>
-            <button
-              className={`${styles.btn} ${styles.btnGhost}`}
-              onClick={deleteMyData}
-            >
-              Xóa dữ liệu của tôi
-            </button>
           </div>
         </div>
       )}
@@ -613,6 +607,14 @@ export function MiniGame() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {myPlayer && (
+        <div className={styles.dataFooter}>
+          <button className={styles.dataDeleteLink} onClick={deleteMyData}>
+            Xóa dữ liệu của tôi
+          </button>
         </div>
       )}
 

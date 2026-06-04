@@ -536,6 +536,25 @@
   align-self: center;
 }
 
+/* ---------- Footer dữ liệu cá nhân ---------- */
+.dataFooter {
+  margin-top: 18px;
+  text-align: center;
+}
+.dataDeleteLink {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.dataDeleteLink:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
 /* ---------- Toast ---------- */
 .toast {
   position: fixed;

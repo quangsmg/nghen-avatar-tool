@@ -27,7 +27,7 @@ export default function DataDeletionPage() {
             tài khoản Facebook bạn đã dùng.
           </li>
           <li>
-            Ở phần thông báo điểm danh phía trên, bấm nút{" "}
+            Kéo xuống cuối trang, bấm nút{" "}
             <strong>“Xóa dữ liệu của tôi”</strong>.
           </li>
           <li>
