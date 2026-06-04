@@ -9,9 +9,9 @@ const NAV_ITEMS: {
   href?: string;
   soon?: boolean;
 }[] = [
-  { key: "avatar", label: "Khung avatar", href: "/" },
+  { key: "minigame", label: "Đua Top Sĩ Số", href: "/" },
+  { key: "avatar", label: "Khung avatar", href: "/avatar" },
   { key: "countdown", label: "Ảnh đếm ngược", href: "/countdown" },
-  { key: "minigame", label: "Mini Game: Đua Top Sĩ Số", soon: true },
 ];
 
 export function SiteHeader({
