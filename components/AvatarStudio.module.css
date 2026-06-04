@@ -109,6 +109,40 @@
   margin-bottom: 20px;
 }
 
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.navLink {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navLink:hover {
+  color: var(--accent);
+}
+
+.navActive {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.navActive:hover {
+  color: #fff;
+}
+
 .headerRow {
   display: flex;
   flex-direction: row;

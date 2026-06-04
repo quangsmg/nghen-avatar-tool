@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Link from "next/link";
 import frameAsset from "../assets/avaframe.png";
 import cover2Asset from "../assets/cover2.png";
 import cover3Asset from "../assets/cover3.png";
@@ -304,6 +305,14 @@ export function AvatarStudio() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
+        <nav className={styles.nav}>
+          <Link href="/" className={`${styles.navLink} ${styles.navActive}`}>
+            Khung avatar
+          </Link>
+          <Link href="/countdown" className={styles.navLink}>
+            Ảnh đếm ngược
+          </Link>
+        </nav>
         <div className={styles.headerRow}>
           <img
             src="/files/logo.png"
