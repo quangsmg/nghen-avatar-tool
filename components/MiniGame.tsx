@@ -225,7 +225,10 @@ export function MiniGame() {
       provider: "facebook",
       options: {
         redirectTo: window.location.origin,
-        // Chỉ xin tên + ảnh đại diện, KHÔNG lấy email người dùng.
+        // Xin thêm public_profile để chắc chắn có tên + ảnh đại diện.
+        // Lưu ý: Supabase mặc định luôn kèm scope "email" (không gỡ được từ
+        // client); bật "Allow users without an email" trong Supabase để vẫn
+        // đăng nhập được khi người dùng không chia sẻ email.
         scopes: "public_profile",
       },
     });

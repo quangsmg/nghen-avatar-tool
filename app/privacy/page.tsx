@@ -31,10 +31,16 @@ export default function PrivacyPage() {
         <h2>2. Dữ liệu chúng tôi thu thập</h2>
         <ul>
           <li>
-            <strong>Khi bạn đăng nhập bằng Facebook:</strong> chỉ tên công khai,
-            ảnh đại diện và mã định danh (ID) do Facebook cung cấp (quyền{" "}
-            <em>public_profile</em>). Chúng tôi <strong>không thu thập email</strong>,
-            mật khẩu, tin nhắn, danh sách bạn bè hay bất kỳ dữ liệu nào khác.
+            <strong>Khi bạn đăng nhập bằng Facebook:</strong> tên công khai, ảnh
+            đại diện và mã định danh (ID) do Facebook cung cấp. Hệ thống đăng nhập
+            (Supabase) có thể nhận địa chỉ email từ Facebook và{" "}
+            <strong>
+              chỉ dùng làm mã định danh tài khoản nội bộ
+            </strong>{" "}
+            — chúng tôi không hiển thị email công khai (không đưa lên bảng xếp
+            hạng), không chia sẻ cho bên thứ ba và không dùng vào mục đích nào
+            khác. Chúng tôi không lấy mật khẩu, tin nhắn, danh sách bạn bè hay
+            bất kỳ dữ liệu nào khác.
           </li>
           <li>
             <strong>Thông tin bạn tự nhập:</strong> tên/biệt danh thời đi học,
