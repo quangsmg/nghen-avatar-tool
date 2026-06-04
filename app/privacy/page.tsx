@@ -31,9 +31,10 @@ export default function PrivacyPage() {
         <h2>2. Dữ liệu chúng tôi thu thập</h2>
         <ul>
           <li>
-            <strong>Khi bạn đăng nhập bằng Facebook:</strong> tên công khai, ảnh
-            đại diện và mã định danh (ID) do Facebook cung cấp. Chúng tôi không
-            lấy mật khẩu, tin nhắn, danh sách bạn bè hay bất kỳ dữ liệu nào khác.
+            <strong>Khi bạn đăng nhập bằng Facebook:</strong> chỉ tên công khai,
+            ảnh đại diện và mã định danh (ID) do Facebook cung cấp (quyền{" "}
+            <em>public_profile</em>). Chúng tôi <strong>không thu thập email</strong>,
+            mật khẩu, tin nhắn, danh sách bạn bè hay bất kỳ dữ liệu nào khác.
           </li>
           <li>
             <strong>Thông tin bạn tự nhập:</strong> tên/biệt danh thời đi học,

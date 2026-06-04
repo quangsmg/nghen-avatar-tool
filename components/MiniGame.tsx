@@ -223,7 +223,11 @@ export function MiniGame() {
     sessionStorage.setItem(INTENT_KEY, "1");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "facebook",
-      options: { redirectTo: window.location.origin },
+      options: {
+        redirectTo: window.location.origin,
+        // Chỉ xin tên + ảnh đại diện, KHÔNG lấy email người dùng.
+        scopes: "public_profile",
+      },
     });
     if (error) showToast("Không mở được đăng nhập Facebook: " + error.message);
   };
