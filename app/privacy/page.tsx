@@ -44,7 +44,7 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Thông tin bạn tự nhập:</strong> tên/biệt danh thời đi học,
-            lớp (12/1–12/8…) và tên hội nhóm bạn chọn hoặc tạo.
+            lớp (12/1–12/12…) và tên hội nhóm bạn chọn hoặc tạo.
           </li>
           <li>
             <strong>Ảnh bạn tải lên</strong> ở công cụ tạo avatar/ảnh đếm ngược

@@ -75,6 +75,7 @@ export function MiniGame() {
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [justCheckedIn, setJustCheckedIn] = useState(false);
+  const [declinePrompt, setDeclinePrompt] = useState(false);
 
   const toastTimer = useRef<number | null>(null);
   const showToast = useCallback((msg: string) => {
@@ -190,6 +191,11 @@ export function MiniGame() {
           a.name.localeCompare(b.name, "vi"),
       );
   }, [players, factions]);
+
+  // Mỗi khi rời bước "điểm danh" thì ẩn lời năn nỉ đi cho lần sau.
+  useEffect(() => {
+    if (flowStep !== "checkin") setDeclinePrompt(false);
+  }, [flowStep]);
 
   const recent = useMemo(() => players.slice(0, 14), [players]);
   const board = tab === "class" ? classBoard : factionBoard;
@@ -316,21 +322,13 @@ export function MiniGame() {
     showToast("Đã xóa dữ liệu của bạn. Hẹn gặp lại!");
   };
 
-  const totalCheckins = players.length;
-
   return (
     <div className={styles.page}>
+      <div className={styles.bg} aria-hidden />
       <SiteHeader
         active="minigame"
         title="Đua Top Sĩ Số"
-        subtitle={
-          <>
-            THPT Nghèn — Khóa 2003-2006 ·{" "}
-            {totalCheckins > 0
-              ? `${totalCheckins} người đã điểm danh`
-              : "Ai cũng đang chờ bạn"}
-          </>
-        }
+        subtitle="Mi sẽ về tham dự hội khóa cùng choa chứ?"
       />
 
       {!isSupabaseConfigured && (
@@ -595,15 +593,42 @@ export function MiniGame() {
                 >
                   {submitting ? "Đang điểm danh…" : "EM CÓ MẶT! 🙋"}
                 </button>
-                <button
-                  className={styles.declineBtn}
-                  onClick={() =>
-                    showToast("Thanh xuân có một lần thôi, suy nghĩ kỹ lại đi bạn ơi!")
-                  }
-                  disabled={submitting}
-                >
-                  Em không dám…
-                </button>
+                {!declinePrompt ? (
+                  <button
+                    className={styles.declineBtn}
+                    onClick={() => setDeclinePrompt(true)}
+                    disabled={submitting}
+                  >
+                    Em không dám…
+                  </button>
+                ) : (
+                  <div className={styles.declineBox}>
+                    <p className={styles.declineNag}>
+                      Thanh xuân chỉ có một lần thôi mà… 🥺 Cả hội đang ngóng mi
+                      về, nỡ lòng nào lỗi hẹn?
+                    </p>
+                    <button
+                      className={`${styles.btn} ${styles.btnPresent}`}
+                      onClick={() => setDeclinePrompt(false)}
+                      disabled={submitting}
+                    >
+                      Thôi được, em tham gia! 🙋
+                    </button>
+                    <button
+                      className={styles.declineBtn}
+                      onClick={() => {
+                        setDeclinePrompt(false);
+                        setFlowStep(null);
+                        showToast(
+                          "Tiếc quá! Khi nào đổi ý thì quay lại điểm danh nhé ❤️"
+                        );
+                      }}
+                      disabled={submitting}
+                    >
+                      Đành lỗi hẹn, mình không tham gia
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

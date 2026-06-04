@@ -84,7 +84,7 @@ drop trigger if exists players_touch on public.players;
 create trigger players_touch before update on public.players
   for each row execute function public.touch_updated_at();
 
--- ---------- 6. Seed dữ liệu lớp 12/1 .. 12/8 ----------
+-- ---------- 6. Seed dữ liệu lớp 12/1 .. 12/12 ----------
 insert into public.classes (id, label, sort_order) values
   ('12/1','Lớp 12/1',1),
   ('12/2','Lớp 12/2',2),
@@ -93,7 +93,11 @@ insert into public.classes (id, label, sort_order) values
   ('12/5','Lớp 12/5',5),
   ('12/6','Lớp 12/6',6),
   ('12/7','Lớp 12/7',7),
-  ('12/8','Lớp 12/8',8)
+  ('12/8','Lớp 12/8',8),
+  ('12/9','Lớp 12/9',9),
+  ('12/10','Lớp 12/10',10),
+  ('12/11','Lớp 12/11',11),
+  ('12/12','Lớp 12/12',12)
 on conflict (id) do nothing;
 
 -- ---------- 7. Seed vài hội vui cho không khí ----------

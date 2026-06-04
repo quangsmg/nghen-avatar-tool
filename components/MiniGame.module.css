@@ -2,6 +2,36 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 20px 16px 48px;
+  position: relative;
+}
+
+/* ---------- Ảnh nền trang ---------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #eaf2e6;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(244, 248, 242, 0.6) 0%,
+      rgba(244, 248, 242, 0.1) 16%,
+      rgba(244, 248, 242, 0) 38%,
+      rgba(244, 248, 242, 0) 78%,
+      rgba(238, 244, 235, 0.85) 100%
+    ),
+    url("/files/bg-minigame.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: center center, center bottom;
+  background-size: cover, cover;
+}
+
+/* Màn rộng (desktop): neo ảnh xuống đáy để giữ trọn trường học + huy hiệu */
+@media (min-width: 760px) {
+  .bg {
+    background-position: center top, center bottom;
+  }
 }
 
 .configNote {
@@ -534,6 +564,26 @@
   text-decoration: underline;
   cursor: pointer;
   align-self: center;
+}
+
+.declineBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 4px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fff6f0;
+  border: 1px solid #f3d9c8;
+}
+
+.declineNag {
+  margin: 0 0 2px;
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #8a4b2b;
 }
 
 /* ---------- Footer dữ liệu cá nhân ---------- */
