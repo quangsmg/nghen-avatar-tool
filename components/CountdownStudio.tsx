@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
+import { SiteHeader } from "./SiteHeader";
 import styles from "./CountdownStudio.module.css";
 
 /** Danh sách câu quote cảm động nạp sẵn. */
@@ -535,21 +535,11 @@ export function CountdownStudio() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <Link href="/" className={styles.navLink}>
-            Khung avatar
-          </Link>
-          <Link href="/countdown" className={`${styles.navLink} ${styles.navActive}`}>
-            Ảnh đếm ngược
-          </Link>
-        </nav>
-        <div className={styles.badge}>Cuộc hẹn 20 năm</div>
-        <h1 className={styles.title}>Tạo ảnh đếm ngược hội khóa</h1>
-        <p className={styles.subtitle}>
-          THPT Nghèn — Khóa 2003-2006 · {countdownText}
-        </p>
-      </header>
+      <SiteHeader
+        active="countdown"
+        title="Tạo ảnh đếm ngược hội khóa"
+        subtitle={<>THPT Nghèn — Khóa 2003-2006 · {countdownText}</>}
+      />
 
       <div className={styles.layout}>
         <div className={styles.card}>

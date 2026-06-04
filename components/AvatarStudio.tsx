@@ -6,11 +6,11 @@ import {
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
 import frameAsset from "../assets/avaframe.png";
 import cover2Asset from "../assets/cover2.png";
 import cover3Asset from "../assets/cover3.png";
 import { GuidePanel } from "./GuidePanel";
+import { SiteHeader } from "./SiteHeader";
 import styles from "./AvatarStudio.module.css";
 
 /** Kích thước xuất (vuông, chuẩn avatar Facebook) */
@@ -304,31 +304,11 @@ export function AvatarStudio() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <Link href="/" className={`${styles.navLink} ${styles.navActive}`}>
-            Khung avatar
-          </Link>
-          <Link href="/countdown" className={styles.navLink}>
-            Ảnh đếm ngược
-          </Link>
-        </nav>
-        <div className={styles.headerRow}>
-          <img
-            src="/files/logo.png"
-            alt="Logo Trường THPT Nghèn"
-            className={styles.headerLogo}
-            width={112}
-            height={112}
-            decoding="async"
-          />
-          <div className={styles.headerText}>
-            <div className={styles.badge}>Cuộc hẹn 20 năm</div>
-            <h1 className={styles.title}>Tạo avatar Facebook/Zalo</h1>
-            <p className={styles.subtitle}>THPT Nghèn — Khóa 2003-2006</p>
-          </div>
-        </div>
-      </header>
+      <SiteHeader
+        active="avatar"
+        title="Tạo avatar Facebook/Zalo"
+        subtitle="THPT Nghèn — Khóa 2003-2006"
+      />
 
       <div className={styles.layout}>
         <div className={styles.mainColumn}>
