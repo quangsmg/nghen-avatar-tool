@@ -21,9 +21,17 @@ body {
   min-height: 100%;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, "Noto Sans", sans-serif;
-  background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Đặt nền trên html (canvas), để body trong suốt — nhờ vậy ảnh nền
+   position:fixed z-index:-1 của trang mini game không bị nền body che. */
+html {
+  background: var(--bg);
+}
+body {
+  background: transparent;
 }
 
 body {

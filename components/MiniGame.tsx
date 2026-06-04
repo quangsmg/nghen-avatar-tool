@@ -15,6 +15,7 @@ import styles from "./MiniGame.module.css";
 type Tab = "class" | "faction";
 type FlowStep = null | "profile" | "faction" | "checkin";
 const INTENT_KEY = "mg_checkin_intent";
+const REF_KEY = "mg_ref_faction";
 
 function metaName(user: User | null): string {
   const m = user?.user_metadata ?? {};
@@ -84,6 +85,23 @@ export function MiniGame() {
     toastTimer.current = window.setTimeout(() => setToast(null), 3200);
   }, []);
 
+  // Giữ bản mới nhất của danh sách hội để các callback (closure) đọc không bị cũ.
+  const factionsRef = useRef<FactionRow[]>([]);
+  useEffect(() => {
+    factionsRef.current = factions;
+  }, [factions]);
+
+  // Đọc hội được giới thiệu qua link (?hoi=...) và nhớ lại qua phiên đăng nhập.
+  useEffect(() => {
+    const hoi = new URLSearchParams(window.location.search).get("hoi");
+    if (hoi) {
+      sessionStorage.setItem(REF_KEY, hoi);
+      // Dọn query cho URL gọn, nhưng vẫn giữ ref trong sessionStorage.
+      const clean = window.location.pathname + window.location.hash;
+      window.history.replaceState(null, "", clean);
+    }
+  }, []);
+
   const fetchBoard = useCallback(async () => {
     if (!supabase) return;
     const [c, f, p] = await Promise.all([
@@ -150,9 +168,16 @@ export function MiniGame() {
   }, [fetchBoard]);
 
   function openProfile(u: User | null, mine: PlayerRow | null) {
+    // Người mới đến từ link giới thiệu -> tự chọn sẵn hội của người rủ
+    // (chỉ khi hội đó có thật trong danh sách).
+    const refHoi = sessionStorage.getItem(REF_KEY);
+    const validRef =
+      refHoi && factionsRef.current.some((f) => f.id === refHoi)
+        ? refHoi
+        : null;
     setFormName(mine?.display_name || metaName(u) || "");
     setFormClass(mine?.class_id ?? null);
-    setFormFaction(mine?.faction_id ?? null);
+    setFormFaction(mine?.faction_id ?? validRef);
     setNewFaction("");
     setFlowStep("profile");
   }
@@ -285,19 +310,20 @@ export function MiniGame() {
   };
 
   const share = async () => {
-    const url = window.location.origin;
+    // Ưu tiên kèm mã hội của mình để bạn bè bấm vào là vào thẳng hội.
+    const hoi = myPlayer?.faction_id;
+    const url = hoi
+      ? `${window.location.origin}/?hoi=${encodeURIComponent(hoi)}`
+      : window.location.origin;
     const text =
       'Tớ vừa điểm danh "Cuộc hẹn 20 năm" THPT Nghèn khóa 2003-2006! ' +
-      "Vào đua top sĩ số với lớp mình nào 👉";
+      "Vào đua top sĩ số cùng hội mình nào 👉";
     try {
-      if (navigator.share) {
-        await navigator.share({ title: "Đua Top Sĩ Số", text, url });
-      } else {
-        await navigator.clipboard.writeText(`${text} ${url}`);
-        showToast("Đã sao chép link, dán lên Facebook để rủ hội bạn nhé!");
-      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      showToast("Đã copy link rồi, đi gửi cho bạn bè nhé! 💚");
     } catch {
-      /* user huỷ chia sẻ */
+      // Một số trình duyệt chặn clipboard -> vẫn cho người dùng thấy link.
+      showToast("Copy link này gửi bạn bè nhé: " + url);
     }
   };
 
