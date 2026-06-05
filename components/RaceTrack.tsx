@@ -9,7 +9,7 @@ export type RaceGroup = { key: string; name: string; members: PlayerRow[] };
 const PEAK = 70;
 
 function shortLabel(tab: "class" | "faction", g: RaceGroup): string {
-  if (tab === "class") return g.key.split("/")[1] ?? g.key;
+  if (tab === "class") return g.key; // hiện đầy đủ: 12/1, 12/2…
   return g.name.length > 7 ? g.name.slice(0, 6) + "…" : g.name;
 }
 

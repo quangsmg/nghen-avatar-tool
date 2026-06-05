@@ -1,5 +1,5 @@
 .page {
-  max-width: 720px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 20px 16px 48px;
   position: relative;
@@ -75,52 +75,61 @@
 }
 
 /* ---------- Hero: đường đua + bảng xếp hạng ---------- */
-.hero {
+.heroTabs {
+  display: flex;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  background: linear-gradient(160deg, #23402a, #1a3022);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 5px;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 22px rgba(20, 40, 25, 0.25);
+}
+
+.heroCols {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+/* Hai card riêng cho đường đua và bảng xếp hạng */
+.raceCard,
+.rankCard {
+  min-width: 0;
   background:
     radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05), transparent 60%),
     linear-gradient(160deg, #23402a, #1a3022);
   border: 6px solid #6b4a2b;
   border-radius: 18px;
-  padding: 14px;
+  padding: 16px;
   box-shadow: 0 16px 40px rgba(20, 40, 25, 0.35);
   color: #f3f6ee;
-  margin-bottom: 16px;
 }
 
-.heroTabs {
-  display: flex;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  padding: 4px;
-  max-width: 380px;
-  margin: 0 auto 14px;
-}
-
-.heroCols {
-  display: flex;
-  gap: 14px;
-  align-items: stretch;
-}
-
-.raceCol {
-  flex: 1 1 47%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rankCol {
+.raceCard {
   flex: 1 1 53%;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rankCard {
+  flex: 1 1 47%;
   display: flex;
   flex-direction: column;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .heroCols {
     flex-direction: column;
+  }
+  .raceCard,
+  .rankCard {
+    flex-basis: auto;
+    width: 100%;
   }
 }
 
@@ -332,14 +341,14 @@
 /* ---------- CTA ---------- */
 .cta {
   width: 100%;
-  background: linear-gradient(135deg, #2d6a4f, #1b4332);
-  color: #fff;
+  background: linear-gradient(135deg, #ffe14d, #f0a500);
+  color: #3a2c05;
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   padding: 16px;
   border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(27, 67, 50, 0.45);
+  box-shadow: 0 10px 26px rgba(240, 165, 0, 0.45);
   animation: pulse 2.2s ease-in-out infinite;
 }
 

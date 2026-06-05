@@ -223,7 +223,6 @@ export function MiniGame() {
     if (flowStep !== "checkin") setDeclinePrompt(false);
   }, [flowStep]);
 
-  const recent = useMemo(() => players.slice(0, 14), [players]);
   const board = tab === "class" ? classBoard : factionBoard;
   const myClassId = myPlayer?.class_id ?? null;
   const myFactionId = myPlayer?.faction_id ?? null;
@@ -415,70 +414,53 @@ export function MiniGame() {
         </div>
       )}
 
-      <div className={styles.hero}>
-        <div className={styles.heroTabs} role="tablist">
-          <button
-            role="tab"
-            aria-selected={tab === "class"}
-            className={`${styles.tab}${tab === "class" ? ` ${styles.tabActive}` : ""}`}
-            onClick={() => setTab("class")}
-          >
-            🏁 Đua theo Lớp
-          </button>
-          <button
-            role="tab"
-            aria-selected={tab === "faction"}
-            className={`${styles.tab}${tab === "faction" ? ` ${styles.tabActive}` : ""}`}
-            onClick={() => setTab("faction")}
-          >
-            🏁 Đua theo Hội
-          </button>
+      <div className={styles.heroTabs} role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === "class"}
+          className={`${styles.tab}${tab === "class" ? ` ${styles.tabActive}` : ""}`}
+          onClick={() => setTab("class")}
+        >
+          🏁 Đua theo Lớp
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === "faction"}
+          className={`${styles.tab}${tab === "faction" ? ` ${styles.tabActive}` : ""}`}
+          onClick={() => setTab("faction")}
+        >
+          🏁 Đua theo Hội
+        </button>
+      </div>
+
+      <div className={styles.heroCols}>
+        {/* ----- Đường đua (trái) ----- */}
+        <div className={styles.raceCard}>
+          <RaceTrack tab={tab} groups={board} myKey={myHighlightKey} />
+          {myPlayer && !flowStep ? (
+            <div className={styles.ctaDone}>✅ Bạn đã điểm danh. Cảm ơn bạn!</div>
+          ) : (
+            <button
+              className={`${styles.btn} ${styles.cta}`}
+              onClick={startCheckIn}
+              disabled={loading}
+            >
+              {user && !myPlayer
+                ? "TIẾP TỤC ĐIỂM DANH →"
+                : "ĐIỂM DANH ĐUA TOP NGAY NÀO!"}
+            </button>
+          )}
+          <p className={styles.ctaHint}>
+            Đăng nhập Facebook 1 chạm để lấy tên &amp; ảnh đại diện, chống tài
+            khoản ảo cày điểm cho lớp.
+          </p>
         </div>
 
-        <div className={styles.heroCols}>
-          {/* ----- Đường đua (trái) ----- */}
-          <div className={styles.raceCol}>
-            <RaceTrack tab={tab} groups={board} myKey={myHighlightKey} />
-            {myPlayer && !flowStep ? (
-              <div className={styles.ctaDone}>✅ Bạn đã điểm danh. Cảm ơn bạn!</div>
-            ) : (
-              <button
-                className={`${styles.btn} ${styles.cta}`}
-                onClick={startCheckIn}
-                disabled={loading}
-              >
-                {user && !myPlayer
-                  ? "TIẾP TỤC ĐIỂM DANH →"
-                  : "ĐIỂM DANH ĐUA TOP NGAY NÀO!"}
-              </button>
-            )}
-            <p className={styles.ctaHint}>
-              Đăng nhập Facebook 1 chạm để lấy tên &amp; ảnh đại diện, chống tài
-              khoản ảo cày điểm cho lớp.
-            </p>
-          </div>
+        {/* ----- Bảng xếp hạng (phải) ----- */}
+        <div className={styles.rankCard}>
+          <h2 className={styles.boardTitle}>🏆 Bảng xếp hạng</h2>
 
-          {/* ----- Bảng xếp hạng (phải) ----- */}
-          <div className={styles.rankCol}>
-            <h2 className={styles.boardTitle}>🏆 Bảng xếp hạng</h2>
-
-            {recent.length > 0 && (
-              <div className={styles.recent}>
-                <span className={styles.recentLabel}>Vừa điểm danh</span>
-                <div className={styles.recentAvatars}>
-                  {recent.map((p) => (
-                    <Avatar
-                      key={p.id}
-                      url={p.avatar_url}
-                      name={p.display_name}
-                      size={30}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <ul className={styles.rankList}>
+          <ul className={styles.rankList}>
               {loading && <li className={styles.empty}>Đang tải bảng xếp hạng…</li>}
               {!loading && board.length === 0 && (
                 <li className={styles.empty}>
@@ -523,7 +505,6 @@ export function MiniGame() {
             </ul>
           </div>
         </div>
-      </div>
 
       {/* ===== Luồng điểm danh (overlay) ===== */}
       {flowStep && (
