@@ -60,7 +60,13 @@ export function RaceTrack({
                   >
                     <span className={styles.car}>
                       {n > 0 && <span className={styles.carCount}>{n}</span>}
-                      <span className={styles.carIcon}>🏎️</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className={styles.carIcon}
+                        src="/files/car.png"
+                        alt="xe đua"
+                        decoding="async"
+                      />
                     </span>
                   </div>
                 </div>
