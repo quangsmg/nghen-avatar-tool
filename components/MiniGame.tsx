@@ -13,7 +13,7 @@ import {
 } from "@/lib/supabaseClient";
 import styles from "./MiniGame.module.css";
 
-type Tab = "class" | "faction";
+type Tab = "class" | "faction" | "roster";
 type FlowStep = null | "profile" | "faction" | "checkin";
 const INTENT_KEY = "mg_checkin_intent";
 const REF_KEY = "mg_ref_faction";
@@ -217,6 +217,20 @@ export function MiniGame() {
           a.name.localeCompare(b.name, "vi"),
       );
   }, [players, factions]);
+
+  // Danh sách tay đua: gom theo lớp (theo thứ tự lớp tự nhiên), bỏ lớp trống.
+  const roster = useMemo(() => {
+    const by = new Map<string, PlayerRow[]>();
+    for (const p of players) {
+      if (!p.class_id) continue;
+      const arr = by.get(p.class_id) ?? [];
+      arr.push(p);
+      by.set(p.class_id, arr);
+    }
+    return classes
+      .map((c) => ({ key: c.id, name: c.label, members: by.get(c.id) ?? [] }))
+      .filter((g) => g.members.length > 0);
+  }, [players, classes]);
 
   // Mỗi khi rời bước "điểm danh" thì ẩn lời năn nỉ đi cho lần sau.
   useEffect(() => {
@@ -431,8 +445,17 @@ export function MiniGame() {
         >
           🏁 Đua theo Hội
         </button>
+        <button
+          role="tab"
+          aria-selected={tab === "roster"}
+          className={`${styles.tab}${tab === "roster" ? ` ${styles.tabActive}` : ""}`}
+          onClick={() => setTab("roster")}
+        >
+          👥 Danh sách tay đua
+        </button>
       </div>
 
+      {tab !== "roster" && (
       <div className={styles.heroCols}>
         {/* ----- Đường đua (trái) ----- */}
         <div className={styles.raceCard}>
@@ -505,6 +528,45 @@ export function MiniGame() {
             </ul>
           </div>
         </div>
+      )}
+
+      {tab === "roster" && (
+        <div className={styles.rosterCard}>
+          <h2 className={styles.boardTitle}>👥 Danh sách tay đua đã điểm danh</h2>
+          {roster.length === 0 ? (
+            <p className={styles.rosterEmpty}>
+              Chưa có tay đua nào điểm danh. Hãy là người mở hàng! 🏁
+            </p>
+          ) : (
+            <div className={styles.rosterGrid}>
+              {roster.map((g) => (
+                <div className={styles.rosterClass} key={g.key}>
+                  <div className={styles.rosterClassHead}>
+                    <span className={styles.rosterClassName}>{g.name}</span>
+                    <span className={styles.rosterClassCount}>
+                      {g.members.length}
+                    </span>
+                  </div>
+                  <ul className={styles.rosterMembers}>
+                    {g.members.map((p) => (
+                      <li className={styles.rosterMember} key={p.id}>
+                        <Avatar
+                          url={p.avatar_url}
+                          name={p.display_name}
+                          size={28}
+                        />
+                        <span className={styles.rosterMemberName}>
+                          {p.display_name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ===== Luồng điểm danh (overlay) ===== */}
       {flowStep && (
