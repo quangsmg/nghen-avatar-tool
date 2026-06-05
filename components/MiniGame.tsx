@@ -374,7 +374,7 @@ export function MiniGame() {
       <div className={styles.bg} aria-hidden />
       <SiteHeader
         active="minigame"
-        title="Đua Top Sĩ Số"
+        title="Đường Đua Sĩ Số"
         subtitle="Mi sẽ về tham dự hội khóa cùng choa chứ?"
       />
 

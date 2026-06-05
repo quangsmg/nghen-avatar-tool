@@ -9,7 +9,7 @@ const NAV_ITEMS: {
   href?: string;
   soon?: boolean;
 }[] = [
-  { key: "minigame", label: "Đua Top Sĩ Số", href: "/" },
+  { key: "minigame", label: "Đường Đua Sĩ Số", href: "/" },
   { key: "avatar", label: "Khung avatar", href: "/avatar" },
   { key: "countdown", label: "Ảnh đếm ngược", href: "/countdown" },
 ];
