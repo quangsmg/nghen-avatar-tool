@@ -13,7 +13,7 @@ import {
 } from "@/lib/supabaseClient";
 import styles from "./MiniGame.module.css";
 
-type Tab = "class" | "faction" | "roster";
+type Tab = "class" | "faction" | "roster" | "teamRoster";
 type FlowStep = null | "profile" | "faction" | "checkin";
 const INTENT_KEY = "mg_checkin_intent";
 const REF_KEY = "mg_ref_faction";
@@ -231,6 +231,20 @@ export function MiniGame() {
       .map((c) => ({ key: c.id, name: c.label, members: by.get(c.id) ?? [] }))
       .filter((g) => g.members.length > 0);
   }, [players, classes]);
+
+  // Danh sách theo team: gom theo hội, bỏ hội trống.
+  const rosterTeam = useMemo(() => {
+    const by = new Map<string, PlayerRow[]>();
+    for (const p of players) {
+      if (!p.faction_id) continue;
+      const arr = by.get(p.faction_id) ?? [];
+      arr.push(p);
+      by.set(p.faction_id, arr);
+    }
+    return factions
+      .map((f) => ({ key: f.id, name: f.name, members: by.get(f.id) ?? [] }))
+      .filter((g) => g.members.length > 0);
+  }, [players, factions]);
 
   // Mỗi khi rời bước "điểm danh" thì ẩn lời năn nỉ đi cho lần sau.
   useEffect(() => {
@@ -453,9 +467,17 @@ export function MiniGame() {
         >
           👥 Danh sách tay đua
         </button>
+        <button
+          role="tab"
+          aria-selected={tab === "teamRoster"}
+          className={`${styles.tab}${tab === "teamRoster" ? ` ${styles.tabActive}` : ""}`}
+          onClick={() => setTab("teamRoster")}
+        >
+          🤝 Danh sách team
+        </button>
       </div>
 
-      {tab !== "roster" && (
+      {tab !== "roster" && tab !== "teamRoster" && (
       <div className={styles.heroCols}>
         {/* ----- Đường đua (trái) ----- */}
         <div className={styles.raceCard}>
@@ -530,16 +552,22 @@ export function MiniGame() {
         </div>
       )}
 
-      {tab === "roster" && (
+      {(tab === "roster" || tab === "teamRoster") && (
         <div className={styles.rosterCard}>
-          <h2 className={styles.boardTitle}>👥 Danh sách tay đua đã điểm danh</h2>
-          {roster.length === 0 ? (
+          <h2 className={styles.boardTitle}>
+            {tab === "teamRoster"
+              ? "🤝 Danh sách thành viên theo team"
+              : "👥 Danh sách tay đua đã điểm danh"}
+          </h2>
+          {(tab === "teamRoster" ? rosterTeam : roster).length === 0 ? (
             <p className={styles.rosterEmpty}>
-              Chưa có tay đua nào điểm danh. Hãy là người mở hàng! 🏁
+              {tab === "teamRoster"
+                ? "Chưa có team nào có người điểm danh. Lập team đi nào! 🤝"
+                : "Chưa có tay đua nào điểm danh. Hãy là người mở hàng! 🏁"}
             </p>
           ) : (
             <div className={styles.rosterGrid}>
-              {roster.map((g) => (
+              {(tab === "teamRoster" ? rosterTeam : roster).map((g) => (
                 <div className={styles.rosterClass} key={g.key}>
                   <div className={styles.rosterClassHead}>
                     <span className={styles.rosterClassName}>{g.name}</span>
