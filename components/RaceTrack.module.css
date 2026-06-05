@@ -1,0 +1,135 @@
+.track {
+  position: relative;
+  height: clamp(230px, 40vw, 300px);
+  border-radius: 14px;
+  padding: 10px 8px 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #2b4a35 0%, #1b3122 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Vạch đích kẻ caro ở gần đỉnh */
+.finish {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12%;
+  height: 12px;
+  z-index: 2;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #f3f3f3 0 7px,
+    #2a2a2a 7px 14px
+  );
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.finishLabel {
+  position: absolute;
+  right: 8px;
+  top: calc(12% - 17px);
+  z-index: 2;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffd166;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.lanes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  padding: 10px 8px 8px;
+}
+
+.lane {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.laneTrack {
+  flex: 1;
+  position: relative;
+}
+
+.bar {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: clamp(9px, 62%, 26px);
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, #5fa97f, #2d6a4f);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gold {
+  background: linear-gradient(180deg, #ffe08a, #f0b62e);
+}
+.silver {
+  background: linear-gradient(180deg, #eef1f4, #c2c9d2);
+}
+.bronze {
+  background: linear-gradient(180deg, #e8b48a, #c97f4f);
+}
+.barMine {
+  outline: 2px solid #ffd166;
+  outline-offset: 0;
+}
+
+/* Xe đua nằm trên đỉnh cột */
+.car {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  pointer-events: none;
+}
+.carIcon {
+  font-size: clamp(13px, 3.4vw, 20px);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+}
+.carCount {
+  margin-bottom: 1px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #ffd166;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.laneLabel {
+  margin-top: 5px;
+  text-align: center;
+  font-size: clamp(0.6rem, 1.7vw, 0.74rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.laneLabelMine {
+  color: #ffd166;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+}

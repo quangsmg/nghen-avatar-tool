@@ -74,6 +74,56 @@
   flex-wrap: wrap;
 }
 
+/* ---------- Hero: đường đua + bảng xếp hạng ---------- */
+.hero {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05), transparent 60%),
+    linear-gradient(160deg, #23402a, #1a3022);
+  border: 6px solid #6b4a2b;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 16px 40px rgba(20, 40, 25, 0.35);
+  color: #f3f6ee;
+  margin-bottom: 16px;
+}
+
+.heroTabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 4px;
+  max-width: 380px;
+  margin: 0 auto 14px;
+}
+
+.heroCols {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.raceCol {
+  flex: 1 1 47%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rankCol {
+  flex: 1 1 53%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 640px) {
+  .heroCols {
+    flex-direction: column;
+  }
+}
+
 /* ---------- Bảng xếp hạng (vibe bảng đen phấn trắng) ---------- */
 .board {
   background:
@@ -94,9 +144,9 @@
 }
 
 .boardTitle {
-  margin: 0;
+  margin: 0 0 12px;
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   color: #fff;

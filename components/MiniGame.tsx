@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { SiteHeader } from "./SiteHeader";
-import { GraphBoard } from "./GraphBoard";
+import { RaceTrack } from "./RaceTrack";
 import {
   isSupabaseConfigured,
   supabase,
@@ -415,103 +415,114 @@ export function MiniGame() {
         </div>
       )}
 
-      <GraphBoard tab={tab} groups={board} />
-
-      <div className={styles.board}>
-        <div className={styles.boardHead}>
-          <h2 className={styles.boardTitle}>Bảng xếp hạng điểm danh</h2>
-          <div className={styles.tabs} role="tablist">
-            <button
-              role="tab"
-              aria-selected={tab === "class"}
-              className={`${styles.tab}${tab === "class" ? ` ${styles.tabActive}` : ""}`}
-              onClick={() => setTab("class")}
-            >
-              Đua theo Lớp
-            </button>
-            <button
-              role="tab"
-              aria-selected={tab === "faction"}
-              className={`${styles.tab}${tab === "faction" ? ` ${styles.tabActive}` : ""}`}
-              onClick={() => setTab("faction")}
-            >
-              Đua theo Hội
-            </button>
-          </div>
+      <div className={styles.hero}>
+        <div className={styles.heroTabs} role="tablist">
+          <button
+            role="tab"
+            aria-selected={tab === "class"}
+            className={`${styles.tab}${tab === "class" ? ` ${styles.tabActive}` : ""}`}
+            onClick={() => setTab("class")}
+          >
+            🏁 Đua theo Lớp
+          </button>
+          <button
+            role="tab"
+            aria-selected={tab === "faction"}
+            className={`${styles.tab}${tab === "faction" ? ` ${styles.tabActive}` : ""}`}
+            onClick={() => setTab("faction")}
+          >
+            🏁 Đua theo Hội
+          </button>
         </div>
 
-        {recent.length > 0 && (
-          <div className={styles.recent}>
-            <span className={styles.recentLabel}>Vừa điểm danh</span>
-            <div className={styles.recentAvatars}>
-              {recent.map((p) => (
-                <Avatar key={p.id} url={p.avatar_url} name={p.display_name} size={30} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        <ul className={styles.rankList}>
-          {loading && <li className={styles.empty}>Đang tải bảng xếp hạng…</li>}
-          {!loading && board.length === 0 && (
-            <li className={styles.empty}>
-              Chưa có ai trong bảng này. Hãy là người mở hàng! 🏁
-            </li>
-          )}
-          {board.map((row, i) => {
-            const isMine = row.key === myHighlightKey;
-            return (
-              <li
-                key={row.key}
-                className={`${styles.rankRow}${isMine ? ` ${styles.rankMine}` : ""}`}
+        <div className={styles.heroCols}>
+          {/* ----- Đường đua (trái) ----- */}
+          <div className={styles.raceCol}>
+            <RaceTrack tab={tab} groups={board} myKey={myHighlightKey} />
+            {myPlayer && !flowStep ? (
+              <div className={styles.ctaDone}>✅ Bạn đã điểm danh. Cảm ơn bạn!</div>
+            ) : (
+              <button
+                className={`${styles.btn} ${styles.cta}`}
+                onClick={startCheckIn}
+                disabled={loading}
               >
-                <span className={`${styles.rank} ${rankClass(i, styles)}`}>
-                  {i + 1}
-                </span>
-                <div className={styles.rankBody}>
-                  <div className={styles.rankName}>
-                    {row.name}
-                    {isMine && <span className={styles.youTag}>bạn ở đây</span>}
-                  </div>
-                  <div className={styles.miniAvatars}>
-                    {row.members.slice(0, 6).map((p) => (
-                      <Avatar
-                        key={p.id}
-                        url={p.avatar_url}
-                        name={p.display_name}
-                        size={26}
-                      />
-                    ))}
-                    {row.members.length > 6 && (
-                      <span className={styles.moreCount}>
-                        +{row.members.length - 6}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <span className={styles.count}>{row.members.length}</span>
-              </li>
-            );
-          })}
-        </ul>
+                {user && !myPlayer
+                  ? "TIẾP TỤC ĐIỂM DANH →"
+                  : "ĐIỂM DANH ĐUA TOP NGAY NÀO!"}
+              </button>
+            )}
+            <p className={styles.ctaHint}>
+              Đăng nhập Facebook 1 chạm để lấy tên &amp; ảnh đại diện, chống tài
+              khoản ảo cày điểm cho lớp.
+            </p>
+          </div>
 
-        {myPlayer && !flowStep ? (
-          <div className={styles.ctaDone}>✅ Bạn đã điểm danh. Cảm ơn bạn!</div>
-        ) : (
-          <button
-            className={`${styles.btn} ${styles.cta}`}
-            onClick={startCheckIn}
-            disabled={loading}
-          >
-            {user && !myPlayer
-              ? "TIẾP TỤC ĐIỂM DANH →"
-              : "ĐUA TOP ĐIỂM DANH NGAY!"}
-          </button>
-        )}
-        <p className={styles.ctaHint}>
-          Đăng nhập Facebook 1 chạm để lấy tên &amp; ảnh đại diện, chống tài khoản
-          ảo cày điểm cho lớp.
-        </p>
+          {/* ----- Bảng xếp hạng (phải) ----- */}
+          <div className={styles.rankCol}>
+            <h2 className={styles.boardTitle}>🏆 Bảng xếp hạng</h2>
+
+            {recent.length > 0 && (
+              <div className={styles.recent}>
+                <span className={styles.recentLabel}>Vừa điểm danh</span>
+                <div className={styles.recentAvatars}>
+                  {recent.map((p) => (
+                    <Avatar
+                      key={p.id}
+                      url={p.avatar_url}
+                      name={p.display_name}
+                      size={30}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <ul className={styles.rankList}>
+              {loading && <li className={styles.empty}>Đang tải bảng xếp hạng…</li>}
+              {!loading && board.length === 0 && (
+                <li className={styles.empty}>
+                  Chưa có ai trong bảng này. Hãy là người mở hàng! 🏁
+                </li>
+              )}
+              {board.map((row, i) => {
+                const isMine = row.key === myHighlightKey;
+                return (
+                  <li
+                    key={row.key}
+                    className={`${styles.rankRow}${isMine ? ` ${styles.rankMine}` : ""}`}
+                  >
+                    <span className={`${styles.rank} ${rankClass(i, styles)}`}>
+                      {i + 1}
+                    </span>
+                    <div className={styles.rankBody}>
+                      <div className={styles.rankName}>
+                        {row.name}
+                        {isMine && <span className={styles.youTag}>bạn ở đây</span>}
+                      </div>
+                      <div className={styles.miniAvatars}>
+                        {row.members.slice(0, 6).map((p) => (
+                          <Avatar
+                            key={p.id}
+                            url={p.avatar_url}
+                            name={p.display_name}
+                            size={26}
+                          />
+                        ))}
+                        {row.members.length > 6 && (
+                          <span className={styles.moreCount}>
+                            +{row.members.length - 6}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className={styles.count}>{row.members.length}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </div>
 
       {/* ===== Luồng điểm danh (overlay) ===== */}
