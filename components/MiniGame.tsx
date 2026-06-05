@@ -348,6 +348,27 @@ export function MiniGame() {
     showToast("Đã xóa dữ liệu của bạn. Hẹn gặp lại!");
   };
 
+  // Chọn "không tham gia": nếu đã điểm danh trước đó thì gỡ khỏi danh sách
+  // (lưu đúng trạng thái không tham gia), còn người mới thì chỉ đóng lại.
+  const declineParticipation = async () => {
+    setDeclinePrompt(false);
+    setFlowStep(null);
+    if (supabase && user && myPlayer) {
+      const { error } = await supabase
+        .from("players")
+        .delete()
+        .eq("id", user.id);
+      if (error) {
+        showToast("Cập nhật chưa được: " + error.message);
+        return;
+      }
+      setMyPlayer(null);
+      setJustCheckedIn(false);
+      await fetchBoard();
+    }
+    showToast("Đã ghi nhận em chưa tham gia. Khi nào đổi ý cứ quay lại nhé ❤️");
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
@@ -505,7 +526,9 @@ export function MiniGame() {
             {flowStep === "profile" && (
               <div className={styles.step}>
                 <div className={styles.stepBadge}>Bước 1/3</div>
-                <h3 className={styles.stepTitle}>Bạn tên gì? Học lớp nào?</h3>
+                <h3 className={styles.stepTitle}>
+                  Điểm danh nào. Em tên gì? Học lớp nào?
+                </h3>
                 <div className={styles.meRow}>
                   <Avatar url={metaAvatar(user)} name={formName} size={48} />
                   <input
@@ -516,7 +539,7 @@ export function MiniGame() {
                     maxLength={40}
                   />
                 </div>
-                <div className={styles.fieldLabel}>Chọn lớp của bạn</div>
+                <div className={styles.fieldLabel}>Chọn lớp của em</div>
                 <div className={styles.classGrid}>
                   {classes.length === 0 && (
                     <span className={styles.empty}>Danh sách lớp đang tải…</span>
@@ -544,7 +567,7 @@ export function MiniGame() {
             {flowStep === "faction" && (
               <div className={styles.step}>
                 <div className={styles.stepBadge}>Bước 2/3</div>
-                <h3 className={styles.stepTitle}>Bạn thuộc team nào?</h3>
+                <h3 className={styles.stepTitle}>Em thuộc team nào không?</h3>
                 <p className={styles.stepDesc}>
                   Chọn một hội đang có, hoặc tự lập hội mới cực độc lạ.
                 </p>
@@ -604,11 +627,11 @@ export function MiniGame() {
                 </h3>
                 <p className={styles.stepDesc}>
                   Bấm “Em có mặt!” để cộng 1 điểm cho{" "}
-                  <strong>{formClass ? `lớp ${formClass}` : "lớp của bạn"}</strong>
+                  <strong>{formClass ? `lớp ${formClass}` : "lớp của em"}</strong>
                   {newFaction.trim()
                     ? ` & hội "${newFaction.trim()}"`
                     : formFaction
-                      ? ` & ${factionBoard.find((f) => f.key === formFaction)?.name ?? "hội của bạn"}`
+                      ? ` & ${factionBoard.find((f) => f.key === formFaction)?.name ?? "hội của em"}`
                       : ""}
                   .
                 </p>
@@ -630,7 +653,7 @@ export function MiniGame() {
                 ) : (
                   <div className={styles.declineBox}>
                     <p className={styles.declineNag}>
-                      Thanh xuân chỉ có một lần thôi mà… 🥺 Cả hội đang ngóng mi
+                      Thanh xuân chỉ có một lần thôi mà… 🥺 Cả hội đang ngóng em
                       về, nỡ lòng nào lỗi hẹn?
                     </p>
                     <button
@@ -642,16 +665,10 @@ export function MiniGame() {
                     </button>
                     <button
                       className={styles.declineBtn}
-                      onClick={() => {
-                        setDeclinePrompt(false);
-                        setFlowStep(null);
-                        showToast(
-                          "Tiếc quá! Khi nào đổi ý thì quay lại điểm danh nhé ❤️"
-                        );
-                      }}
+                      onClick={declineParticipation}
                       disabled={submitting}
                     >
-                      Đành lỗi hẹn, mình không tham gia
+                      Đành lỗi hẹn, em không tham gia được
                     </button>
                   </div>
                 )}
