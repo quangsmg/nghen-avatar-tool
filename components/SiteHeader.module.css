@@ -87,10 +87,20 @@
   text-align: center;
 }
 
+/* Cân bằng với logo bên trái để khối chữ căn giữa thật sự */
+.logoSpacer {
+  width: 96px;
+  flex-shrink: 0;
+}
+
 @media (min-width: 600px) {
   .logo {
     width: 112px;
     height: 112px;
+  }
+
+  .logoSpacer {
+    width: 112px;
   }
 
   .brandRow {

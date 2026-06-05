@@ -68,6 +68,7 @@ export function SiteHeader({
           <h1 className={styles.title}>{title}</h1>
           <p className={styles.subtitle}>{subtitle}</p>
         </div>
+        <span className={styles.logoSpacer} aria-hidden />
       </div>
     </header>
   );
