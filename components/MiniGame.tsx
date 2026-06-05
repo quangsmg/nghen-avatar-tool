@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { SiteHeader } from "./SiteHeader";
+import { GraphBoard } from "./GraphBoard";
 import {
   isSupabaseConfigured,
   supabase,
@@ -191,12 +192,12 @@ export function MiniGame() {
       arr.push(p);
       by.set(p.class_id, arr);
     }
+    const num = (id: string) => parseInt(id.split("/")[1] ?? "0", 10) || 0;
     return classes
       .map((c) => ({ key: c.id, name: c.label, members: by.get(c.id) ?? [] }))
       .sort(
         (a, b) =>
-          b.members.length - a.members.length ||
-          a.name.localeCompare(b.name, "vi"),
+          b.members.length - a.members.length || num(a.key) - num(b.key),
       );
   }, [players, classes]);
 
@@ -413,6 +414,8 @@ export function MiniGame() {
           </div>
         </div>
       )}
+
+      <GraphBoard tab={tab} groups={board} />
 
       <div className={styles.board}>
         <div className={styles.boardHead}>
