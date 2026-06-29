@@ -15,7 +15,7 @@ export async function generateMetadata({
   const { code } = await params;
   const name = GUESTS[code];
   const title = name
-    ? `Thư mời ${name} — Cuộc hẹn 20 năm THPT Nghèn`
+    ? `Thư mời Thầy/Cô ${name} — Cuộc hẹn 20 năm THPT Nghèn`
     : "Thư mời — Cuộc hẹn 20 năm THPT Nghèn";
   return {
     title,

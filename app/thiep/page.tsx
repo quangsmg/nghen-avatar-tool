@@ -19,7 +19,7 @@ export async function generateMetadata({
   const sp = await searchParams;
   const name = (sp.ten ?? "").trim();
   const title = name
-    ? `Thư mời ${name} — Cuộc hẹn 20 năm THPT Nghèn`
+    ? `Thư mời Thầy/Cô ${name} — Cuộc hẹn 20 năm THPT Nghèn`
     : "Thư mời — Cuộc hẹn 20 năm THPT Nghèn";
   return {
     title,
