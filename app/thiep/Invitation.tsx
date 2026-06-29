@@ -3,7 +3,7 @@ import styles from "./Thiep.module.css";
 export const IMG = "/files/thiep-moi.jpg";
 
 // Vị trí mặc định của tên trên dòng "Kính gửi Thầy/Cô: ……" (theo % của ảnh).
-export const POS = { x: 20.5, y: 49.3, size: 2.6 };
+export const POS = { x: 20.5, y: 48.5, size: 2.2 };
 
 export function Invitation({
   name,
