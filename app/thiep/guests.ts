@@ -58,4 +58,6 @@ export const GUESTS: Record<string, string> = {
   "q5vmds": "Nguyễn Phú Quốc",
   "tuwene": "Đặng Văn Toàn",
   "km2s58": "Ngô Đức Chính",
+  "33j6gd": "Nguyễn Hồng Sơn",
+  "ztxqku": "Nguyễn Viết Hải",
 };
